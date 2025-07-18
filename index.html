@@ -643,6 +643,7 @@
 
         function loadMessages() {
             const messages = JSON.parse(localStorage.getItem('portfolioMessages') || '[]');
+            console.log(messages); // Log messages to see if they are loaded correctly
             messagesContainer.innerHTML = '';
             
             messages.forEach((msg, index) => {
@@ -696,7 +697,18 @@
                     // Add new message at beginning
                     messages.unshift(message);
                 }
-                                
+                
+                localStorage.setItem('portfolioMessages', JSON.stringify(messages));
+                
+                // Optional: Still send to formspree if you want email notifications
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                        
                 if (response.ok) {
                     alert('Pesan berhasil dikirim! Terima kasih atas pesan Anda.');
                     contactForm.reset();
